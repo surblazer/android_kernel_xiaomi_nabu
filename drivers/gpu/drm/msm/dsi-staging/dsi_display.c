@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2016-2021, The Linux Foundation. All rights reserved.
  * Copyright (C) 2021 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -6773,6 +6773,13 @@ int dsi_display_validate_mode_change(struct dsi_display *display,
 					DSI_MODE_FLAG_VRR) &&
 					(!dyn_clk_caps->maintain_const_fps)) {
 					pr_err("dfps and dyn clk concurrent\n");
+					rc = -ENOTSUPP;
+					goto error;
+				}
+
+				if (cur_mode->timing.refresh_rate !=
+						adj_mode->timing.refresh_rate) {
+					pr_err("fps change along with dyn clk not supported\n");
 					rc = -ENOTSUPP;
 					goto error;
 				}
